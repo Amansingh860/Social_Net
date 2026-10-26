@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard · SocialNet{% endblock %}
+
+{% block public_content %}
+<div class="admin-public-page">
+  <header class="admin-public-header">
+    <a class="brand admin-brand" href="{{ url_for('admin_dashboard') }}" aria-label="SocialNet admin home">
+      <span class="brand-mark">S</span>
+      <span class="admin-brand-copy">Social<span class="brand-accent">Net</span><small>ADMIN CONTROL CENTER</small></span>
+    </a>
+    <div class="admin-header-actions">
+      <span class="admin-session-pill"><i></i> Administrator session</span>
+      <a class="btn ghost" href="{{ url_for('admin_logout') }}">Sign out <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main class="admin-wrap admin-page">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">SYSTEM ADMINISTRATION</p>
+        <h1>Control Center</h1>
+        <p class="subtext">A clear view of users and connection activity.</p>
+      </div>
+      <span class="admin-live-label"><i></i> System overview</span>
+    </div>
+
+    <section class="admin-stats" aria-label="Platform statistics">
+      <div class="card"><span>Users</span><b>{{ stats.users }}</b><small>Registered accounts</small></div>
+      <div class="card"><span>Pending requests</span><b>{{ stats.pending }}</b><small>Open connection requests</small></div>
+      <div class="card"><span>Friendships</span><b>{{ stats.friendships }}</b><small>Active connections</small></div>
+      <div class="card"><span>Favorites</span><b>{{ stats.favourites }}</b><small>Saved people</small></div>
+    </section>
+
+    <section class="card admin-panel">
+      <div class="section-head">
+        <div>
+          <h2>Registered users</h2>
+          <span>Search and manage accounts</span>
+        </div>
+        <label class="admin-search-label" for="adminSearch">Search users</label>
+        <input id="adminSearch" class="small-input" type="search" placeholder="Search users..." aria-label="Search registered users">
+      </div>
+      <div class="table-scroll">
+        <table id="usersTable">
+          <thead>
+            <tr><th scope="col">User</th><th scope="col">Username</th><th scope="col">Email</th><th scope="col">Joined</th><th scope="col">Status</th><th scope="col">Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for u in users %}
+            <tr>
+              <td><div class="table-user"><img src="{{ url_for('static', filename='uploads/' + u['profile_picture']) }}" alt=""><b>{{ u['name'] }}</b></div></td>
+              <td>@{{ u['username'] }}</td>
+              <td>{{ u['email'] }}</td>
+              <td>{{ u['created_at'][:10] }}</td>
+              <td><span class="status {% if u['is_blocked'] %}blocked{% else %}ok{% endif %}">{{ 'Blocked' if u['is_blocked'] else 'Active' }}</span></td>
+              <td>
+                <div class="actions">
+                  <form method="post" action="{{ url_for('admin_block', user_id=u['id']) }}">
+                    <button type="submit" class="btn small ghost">{{ 'Unblock' if u['is_blocked'] else 'Block' }}</button>
+                  </form>
+                  <form method="post" action="{{ url_for('admin_delete', user_id=u['id']) }}" data-confirm="Permanently delete this user?">
+                    <button type="submit" class="btn small danger-btn">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6"><div class="empty">No user accounts are registered yet.</div></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card admin-panel">
+      <div class="section-head">
+        <div>
+          <h2>Friend request monitor</h2>
+          <span>Latest connection activity</span>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th scope="col">Sender</th><th scope="col">Receiver</th><th scope="col">Status</th><th scope="col">Date</th></tr></thead>
+          <tbody>
+            {% for r in requests %}
+            <tr>
+              <td>@{{ r['sender'] }}</td>
+              <td>@{{ r['receiver'] }}</td>
+              <td><span class="status {{ r['status'] }}">{{ r['status'] }}</span></td>
+              <td>{{ r['created_at'][:10] }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4"><div class="empty">No friend requests yet.</div></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <p class="admin-footer-note">SocialNet · Private administration area</p>
+  </main>
+</div>
+{% endblock %}

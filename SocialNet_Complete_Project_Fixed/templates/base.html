@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>{% block title %}SocialNet{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{% if logged_in %}app-shell{% else %}public-shell{% endif %}">
+{% if logged_in %}<div class="page-entry" id="pageEntry" aria-hidden="true"><div class="page-entry-noise"></div><div class="page-entry-inner"><span class="entry-eyebrow">SOCIALNET / WELCOME BACK</span><h1>Good to have<br><em>{{ session.get('user_name','you')|truncate(20, True, '') }}</em> here.</h1><p>Your social space is ready.</p><div class="motion-dock entry-dock" data-motion-dock><span class="dock-item">✦<small>Connect</small></span><span class="dock-item">◌<small>Chat</small></span><span class="dock-item">↗<small>Share</small></span><span class="dock-item active"><small>Open</small>↗</span><span class="dock-item">☆<small>Save</small></span></div><div class="entry-loader"><i></i></div></div></div>{% endif %}
+{% if logged_in %}
+<header class="topbar">
+  <div class="topbar-left"><button class="icon-btn mobile-menu" data-action="toggle-sidebar" aria-label="Menu">☰</button>
+  <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">S</span><span>Social<span class="brand-accent">Net</span></span></a></div>
+  <form class="global-search" action="{{ url_for('search') }}" method="get" autocomplete="off">
+    <span>⌕</span><input id="globalSearch" name="q" value="{{ request.args.get('q','') }}" placeholder="Search people, posts, or topics..." aria-label="Search">
+    <kbd>⌘ K</kbd><div class="search-suggest" id="searchSuggest"><div class="suggest-head">Quick search</div><div class="suggest-item">Search people by name or @username</div><div class="suggest-item">Find topics and communities</div></div>
+  </form>
+  <div class="top-actions">
+    <a class="icon-btn has-dot" href="{{ url_for('requests_page') }}" title="Notifications">♢{% if pending_count %}<i>{{ pending_count }}</i>{% endif %}</a>
+    <a class="icon-btn" href="{{ url_for('friends') }}" title="Messages">◌</a>
+    <button class="icon-btn" data-action="toggle-theme" title="Toggle theme">◐</button>
+    <div class="user-menu">
+      <a href="{{ url_for('profile') }}" class="mini-profile"><img src="{{ url_for('static', filename='uploads/'+(current_user['profile_picture'] if current_user else 'default-avatar.svg')) }}" onerror="this.src='{{ url_for('static', filename='uploads/default-avatar.svg') }}'"><span>{{ session.get('user_name','User') }}</span><b>⌄</b></a>
+    </div>
+  </div>
+</header>
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+  <div class="side-scroll">
+    <div class="side-label">MENU</div>
+    <button class="all-nav-trigger" type="button" data-action="toggle-all-nav" aria-expanded="false" aria-controls="allNavPanel">
+      <span class="all-nav-trigger-icon">≡</span><span>All</span><span class="all-nav-chevron">↗</span>
+    </button>
+    <div class="side-profile">
+      <img src="{{ url_for('static', filename='uploads/'+(current_user['profile_picture'] if current_user else 'default-avatar.svg')) }}" alt="">
+      <div><b>{{ session.get('user_name','User') }}</b><small>@{{ session.get('username','user') }}</small></div>
+      <a href="{{ url_for('profile') }}">•••</a>
+    </div>
+  </div>
+  <div class="side-footer"><a href="{{ url_for('settings') }}">⚙ Settings</a><a class="logout-link" href="{{ url_for('logout') }}">↪ Sign out</a></div>
+</aside>
+    <div class="all-nav-panel" id="allNavPanel">
+      <div class="all-nav-head"><div><span class="side-label">NAVIGATE</span><b>Everything in one place</b></div><button type="button" class="icon-btn all-nav-close" data-action="toggle-all-nav" aria-label="Close navigation">×</button></div>
+      <nav class="side-nav" aria-label="Primary navigation">
+        <a href="{{ url_for('dashboard') }}" class="nav-morph nav-home {% if request.endpoint=='dashboard' %}active{% endif %}"><span class="side-icon">⌂</span><span class="side-nav-label">Home</span></a>
+        <a href="{{ url_for('search') }}" class="nav-morph nav-explore {% if request.endpoint=='search' %}active{% endif %}"><span class="side-icon">⌕</span><span class="side-nav-label">Explore</span></a>
+        <a href="{{ url_for('friends') }}" class="nav-morph nav-messages {% if request.endpoint in ['chat'] %}active{% endif %}"><span class="side-icon">◌</span><span class="side-nav-label">Messages</span></a>
+        <a href="{{ url_for('friends') }}" class="nav-morph nav-friends {% if request.endpoint=='friends' %}active{% endif %}"><span class="side-icon">♧</span><span class="side-nav-label">Friends</span></a>
+        <a href="{{ url_for('groups') }}" class="nav-morph nav-groups {% if request.endpoint=='groups' %}active{% endif %}"><span class="side-icon">▦</span><span class="side-nav-label">Groups</span></a>
+        <a href="{{ url_for('friends') }}#favorites" class="nav-morph nav-favorites "><span class="side-icon">★</span><span class="side-nav-label">Favorites</span></a>
+        <a href="{{ url_for('requests_page') }}" class="nav-morph nav-requests {% if request.endpoint=='requests_page' %}active{% endif %}"><span class="side-icon">♢</span><span class="side-nav-label">Requests</span>{% if pending_count %}<em>{{ pending_count }}</em>{% endif %}</a>
+        <a href="{{ url_for('profile') }}" class="nav-morph nav-profile {% if request.endpoint=='profile' %}active{% endif %}"><span class="side-icon">◎</span><span class="side-nav-label">Profile</span></a>
+        <a href="{{ url_for('settings') }}" class="nav-morph nav-settings {% if request.endpoint=='settings' %}active{% endif %}"><span class="side-icon">⚙</span><span class="side-nav-label">Settings</span></a>
+      </nav>
+    </div>
+<main class="page-content">
+{% with messages=get_flashed_messages(with_categories=true) %}{% if messages %}<div class="toast-wrap">{% for category,message in messages %}<div class="toast {{ category }}"><span>{% if category=='success' %}✓{% else %}!{% endif %}</span>{{ message }}<button data-action="close-toast">×</button></div>{% endfor %}</div>{% endif %}{% endwith %}
+{% block content %}{% endblock %}
+</main></div>
+<nav class="mobile-bottom" aria-label="Mobile navigation"><button class="mobile-all-trigger" type="button" data-action="toggle-all-nav" aria-expanded="false" aria-controls="allNavPanel"><span>≡</span><small>All menu</small></button><a href="{{ url_for('profile') }}" class="mobile-profile-shortcut"><img src="{{ url_for('static', filename='uploads/'+(current_user['profile_picture'] if current_user else 'default-avatar.svg')) }}" alt="Profile"><small>Profile</small></a></nav>
+{% else %}
+{% with messages=get_flashed_messages(with_categories=true) %}{% if messages %}<div class="toast-wrap">{% for category,message in messages %}<div class="toast {{ category }}"><span>!</span>{{ message }}<button data-action="close-toast">×</button></div>{% endfor %}</div>{% endif %}{% endwith %}
+{% endif %}
+{% block public_content %}{% endblock %}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body></html>

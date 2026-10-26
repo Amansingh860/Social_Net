@@ -1,0 +1,62 @@
+{% extends "base.html" %}{% block title %}Login · SocialNet{% endblock %}{% block public_content %}
+<div class="auth-page-v2">
+  <div class="auth-ambient"></div>
+  <section class="auth-showcase">
+    <div class="auth-nav">
+      <a class="brand auth-brand" href="{{ url_for('login') }}"><span class="brand-mark">S</span><span>Social<span class="brand-accent">Net</span></span></a>
+      <div class="auth-nav-pill" aria-label="SocialNet sections"><span class="active">Home</span><span>Community</span><span>Stories</span><span>Chat</span><span>People</span></div>
+      <a class="auth-nav-cta" href="{{ url_for('register') }}">Join SocialNet <span>↗</span></a>
+    </div>
+
+    <div class="auth-showcase-copy">
+      <p class="eyebrow">A BETTER WAY TO CONNECT</p>
+      <h1>Build a circle<br><span>that feels like</span><br><em>yours.</em></h1>
+      <p class="auth-lede">Share moments, find your people and keep every conversation in one calm, beautifully designed space.</p>
+      <div class="auth-metrics"><div><b>01</b><span>People first</span></div><div><b>02</b><span>Private by design</span></div><div><b>03</b><span>Made to feel fast</span></div></div>
+    </div>
+
+    <div class="motion-dock showcase-dock" data-motion-dock aria-label="Animated SocialNet actions">
+      <span class="dock-item">⌂<small>Home</small></span>
+      <span class="dock-item">◉<small>Explore</small></span>
+      <span class="dock-item">✦<small>Stories</small></span>
+      <span class="dock-item">◌<small>Chat</small></span>
+      <span class="dock-item active"><small>Connect</small>↗</span>
+    </div>
+    <div class="showcase-glow glow-a"></div><div class="showcase-glow glow-b"></div>
+  </section>
+
+  <section class="auth-form-wrap-v2">
+    <div class="auth-panel-top"><span>MEMBER ACCESS</span><span class="status-live"><i></i> Online</span></div>
+    <div class="auth-card-v2">
+      <div class="auth-card-mark">S</div>
+      <p class="eyebrow">WELCOME BACK</p>
+      <h2>Sign in to your space.</h2>
+      <p class="muted auth-panel-copy">Use the username you created when you joined SocialNet.</p>
+      <form method="post" id="loginForm" autocomplete="on">
+        <label for="loginUsername">Username</label>
+        <div class="input-icon input-lift"><span>@</span><input id="loginUsername" name="username" required autocomplete="username" placeholder="e.g. sachin01"></div>
+        <label for="loginPassword">Password</label>
+        <div class="password-wrap input-lift"><input id="loginPassword" name="password" type="password" required autocomplete="current-password" placeholder="Your password"><button type="button" class="password-eye" data-action="toggle-password" aria-label="Show password">◉</button></div>
+        <button class="btn primary premium-cta full login-submit" type="submit"><span class="cta-label">Enter SocialNet</span><span class="cta-icon">↗</span></button>
+      </form>
+      <div class="auth-divider"><span>NEW HERE?</span></div>
+      <a class="auth-secondary-cta" href="{{ url_for('register') }}"><span>Create your account</span><span>↗</span></a>
+      <a class="admin-link" href="{{ url_for('admin_login') }}">⚙ Administrator access</a>
+    </div>
+    <div class="auth-trust"><span>Secure session</span><i></i><span>SQLite backed</span><i></i><span>Responsive UI</span></div>
+    <small class="auth-foot">© SocialNet · Built for meaningful connections</small>
+  </section>
+</div>
+
+<div class="login-transition" id="loginTransition" aria-hidden="true">
+  <div class="login-transition-bg"></div>
+  <div class="login-transition-content">
+    <span class="entry-eyebrow">SOCIALNET / ENTERING</span>
+    <h2>Welcome back,<br><em>let's connect.</em></h2>
+    <div class="motion-dock transition-dock" data-motion-dock>
+      <span class="dock-item">⌂<small>Home</small></span><span class="dock-item">◉<small>Explore</small></span><span class="dock-item">◌<small>Chat</small></span><span class="dock-item active"><small>Open</small>↗</span><span class="dock-item">☆<small>Saved</small></span>
+    </div>
+    <div class="transition-line"><i></i></div>
+  </div>
+</div>
+{% endblock %}

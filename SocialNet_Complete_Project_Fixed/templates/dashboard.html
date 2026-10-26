@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block title %}Home · SocialNet{% endblock %}
+{% block content %}
+<div class="feed-layout">
+<section class="feed-main">
+<div class="welcome-row"><div><p class="eyebrow">YOUR SOCIAL SPACE</p><h1>Good to see you, {{ user['name'].split(' ')[0] }} <span>✦</span></h1><p class="subtext">Stay connected with your people and discover something new.</p></div><a class="avatar-ring" href="{{ url_for('profile') }}"><img src="{{ url_for('static',filename='uploads/'+user['profile_picture']) }}"></a></div>
+
+<section class="stories-card card"><div class="section-head"><div><h2>Stories</h2><span>Fresh from your circle</span></div><button class="text-btn" data-action="open-story">View all →</button></div>
+<div class="stories-row">
+<div class="story add-story" data-action="open-story"><div class="story-img"><img src="{{ url_for('static',filename='uploads/'+user['profile_picture']) }}"><b>＋</b></div><span>Your story</span></div>
+{% for f in friends[:7] %}<div class="story" data-action="open-story" data-story-name="{{ f['name'] }}"><div class="story-img"><img src="{{ url_for('static',filename='uploads/'+f['profile_picture']) }}"></div><span>{{ f['name'].split(' ')[0] }}</span></div>{% else %}<div class="story-empty">Add friends to see stories.</div>{% endfor %}
+</div></section>
+
+<div class="section-head feed-heading"><div><h2>Your feed</h2><span>{{ friends|length }} people in your circle</span></div><button class="filter-btn">Latest ▾</button></div>
+<article class="post-card card demo-post"><div class="post-head"><img src="{{ url_for('static',filename='uploads/'+user['profile_picture']) }}"><div class="post-meta"><b>{{ user['name'] }} <i class="verified">✓</i></b><span>@{{ user['username'] }} · Just now</span></div><button class="more-btn">•••</button></div><p class="post-copy">Welcome to your new SocialNet space. Start by connecting with friends, adding favorites, and opening a conversation. ✨</p><div class="post-media gradient-media"><div><span>✦</span><b>Your social space starts here</b><small>Connect · Chat · Discover</small></div></div><div class="post-stats"><span>♡ 0 likes</span><span>0 comments</span></div><div class="post-actions"><button data-action="like">♡ <span>Like</span></button><button data-action="comment">◌ <span>Comment</span></button><button data-action="share">↗ <span>Share</span></button><button data-action="save">▱ <span>Save</span></button></div></article>
+
+<section class="card circle-card"><div class="section-head"><div><h2>Your people</h2><span>Quick access to friends</span></div><a class="text-btn" href="{{ url_for('friends') }}">See all →</a></div><div class="people-list">{% for f in friends[:5] %}<a class="people-row" href="{{ url_for('chat',user_id=f['id']) }}"><img src="{{ url_for('static',filename='uploads/'+f['profile_picture']) }}"><div><b>{{ f['name'] }}</b><span>@{{ f['username'] }}</span></div><small>Message</small></a>{% else %}<div class="empty">No friends yet. Search for people to build your circle.</div>{% endfor %}</div></section>
+</section>
+
+<aside class="right-rail">
+<section class="rail-card card"><div class="rail-title"><h3>Connections</h3><a href="{{ url_for('friends') }}">See all</a></div><div class="mini-list">{% for f in friends[:4] %}<a href="{{ url_for('chat',user_id=f['id']) }}"><img src="{{ url_for('static',filename='uploads/'+f['profile_picture']) }}"><span><b>{{ f['name'] }}</b><small>Friend</small></span><i class="online"></i></a>{% else %}<p class="muted">Your friend list will appear here.</p>{% endfor %}</div></section>
+<section class="rail-card card"><div class="rail-title"><h3>Favorites</h3><a href="{{ url_for('friends') }}#favorites">Manage</a></div>{% for f in favourites[:4] %}<a class="favorite-mini" href="{{ url_for('chat',user_id=f['id']) }}"><span>★</span><img src="{{ url_for('static',filename='uploads/'+f['profile_picture']) }}"><b>{{ f['name'] }}</b></a>{% else %}<p class="muted">Star people you never want to miss.</p>{% endfor %}</section>
+<section class="rail-card card trends"><div class="rail-title"><h3>Trending topics</h3><span>Today</span></div><a>#WebDevelopment <small>Explore</small></a><a>#CollegeLife <small>Explore</small></a><a>#Photography <small>Explore</small></a><a>#Technology <small>Explore</small></a></section>
+</aside>
+</div>
+
+
+<div class="modal-backdrop" id="postModal"><div class="modal"><button class="modal-close" data-action="close-modal">×</button><p class="eyebrow">CREATE</p><h2>Start a post</h2><p class="muted">Your current backend does not include a posts table yet, so this redesigned composer is ready for the future post API without pretending a post was saved.</p><div class="feature-preview"><span>✦</span><div><b>Composer ready</b><small>Photo · Video · Feeling · Location · Poll · GIF · Tag people</small></div></div><button class="btn primary full" data-action="close-modal">Close composer</button></div></div>
+<div class="modal-backdrop" id="storyModal"><div class="story-viewer"><button class="modal-close" data-action="close-modal">×</button><div class="story-progress"></div><div class="story-big"><span>✦</span><h2 id="storyName">Story viewer</h2><p>Story media can plug into the existing backend when stories are added.</p></div></div></div>
+{% endblock %}
